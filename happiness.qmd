@@ -1,0 +1,104 @@
+---
+title: "World Happiness Report(2024) Dashboard"
+author: "Aichen Rayphand"
+format:
+  dashboard:
+    theme: Vapor 
+nav-buttons: [github]
+---
+
+### Row 1
+
+```{r}
+library(tidyverse)
+library(plotly)
+library(janitor)
+library(ggplot2)
+
+happiness <- read_csv("data/World-happiness-report-2024.csv")
+Happiness <- happiness %>%
+  clean_names
+```
+
+```{r, echo=FALSE}
+
+p2 <- ggplot(data = Happiness, aes(x = regional_indicator, y = ladder_score))+
+  geom_bar(stat = "identity") +
+  geom_col(fill= "Purple", color= "Black") +
+  labs(
+    title = "Happiness score/rate by region",
+    x = "Regions",
+    y = "Happiness (Ladder) Scores"
+  ) +
+  theme(axis.text.x = element_text(angle = 60, vjust = .5, hjust = 1, color= "black", family= "serif"),
+        axis.title = element_text(face= "bold", family = "sans", color = "plum"),
+        plot.title = element_text(size = 17, face = "bold", family = "mono", hjust= 0.5),
+        panel.background = element_rect(fill= "black", color = NA),
+        plot.background = element_rect(fill= "lavender", color = NA))
+
+ggplotly(p2)
+
+```
+
+```{r}
+## World_happiness visuals{.tabset}
+
+### Happiness rates when there's free will
+
+p2a <- ggplot(data = Happiness,aes( x =freedom_to_make_life_choices, y = ladder_score)) +
+  geom_point(size= 2.5, alpha= 0.8, color= "white") +
+  geom_smooth (method= "lm",se= FALSE, color= "pink") +
+  labs(title = "Happiness (ladder) scores when there's freedom to make life choices",
+       x= "Free-will",
+       y= "Happiness score",
+       color= "Region") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face= "bold", family = "mono", size = 17, hjust= 0.5 ),
+    axis.title = element_text(face= "bold", family = "sans", color = "plum"),
+    panel.background = element_rect(fill= "black", color = NA),
+    plot.background = element_rect(fill= "lavender", color = NA)
+  )
+ggplotly(p2a)
+
+### Happiness rates when region is corrupted: less free-will
+
+p2b <- ggplot(data = Happiness,aes( x =perceptions_of_corruption, y = ladder_score)) +
+  geom_point(size= 2.5, alpha= 0.8, color= "white") +
+  geom_smooth (method= "lm",se= FALSE, color= "pink") +
+  labs(title = "Influence of corruption perceptions on happiness levels (ladder score)",
+       x= "Corruption perception",
+       y= "Happiness score",
+       color= "Region") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face= "bold", family = "mono", size = 17, hjust= 0.5 ),
+    axis.title = element_text(face= "bold", family = "sans", color = "plum"),
+    panel.background = element_rect(fill= "black", color = NA),
+    plot.background = element_rect(fill= "lavender", color = NA)
+  )
+  
+ggplotly(p2b)  
+  
+
+```
+
+### Row 2
+
+```{r}
+
+```
+
+```{r}
+
+### Column1 {.tabset}
+
+#### Complexity
+
+
+
+
+```
+
+```{r}
+```

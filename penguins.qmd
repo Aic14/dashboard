@@ -1,0 +1,34 @@
+---
+title: "penguins.qmd"
+author: "Aichen Rayphand"
+format: dashboard
+---
+
+```{r, echo=FALSE}
+library(tidyverse)
+library(plotly)
+library(janitor)
+
+penguins <- read_csv("data/penguins_lter.csv")
+penguins <- penguins %>%
+  clean_names()
+```
+
+```{r, warning= FALSE}
+ggplot(penguins, aes(island, culmen_length_mm, fill = island))+
+  geom_boxplot() +
+  labs(
+    title= "The Culmen length by the penguin islands",
+    x = "Island",
+    y = "Culmen_length_mm"
+  )
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
