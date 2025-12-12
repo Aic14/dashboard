@@ -7,7 +7,7 @@ format:
 nav-buttons: [github]
 ---
 
-### Row 1
+## Row 1
 
 ```{r}
 library(tidyverse)
@@ -21,14 +21,17 @@ Happiness <- happiness %>%
 ```
 
 ```{r, echo=FALSE}
+Happiness_region <- Happiness %>%
+  group_by(regional_indicator) %>%
+  summarize(mean_score = mean (ladder_score, na.rm = TRUE))
 
-p2 <- ggplot(data = Happiness, aes(x = regional_indicator, y = ladder_score))+
+p2 <- ggplot(data = Happiness_region, aes(x =reorder(regional_indicator, mean_score), y= mean_score))+
   geom_bar(stat = "identity") +
   geom_col(fill= "Purple", color= "Black") +
   labs(
     title = "Happiness score/rate by region",
     x = "Regions",
-    y = "Happiness (Ladder) Scores"
+    y = "Happiness Scores"
   ) +
   theme(axis.text.x = element_text(angle = 60, vjust = .5, hjust = 1, color= "black", family= "serif"),
         axis.title = element_text(face= "bold", family = "sans", color = "plum"),
@@ -38,15 +41,18 @@ p2 <- ggplot(data = Happiness, aes(x = regional_indicator, y = ladder_score))+
 
 ggplotly(p2)
 
+
 ```
 
-```{r}
-## World_happiness visuals{.tabset}
+## World_Happiness visuals {. tabset}
 
-### Happiness rates when there's free will
+### Plots
+### plot 1
+```{r, warning=FALSE}
 
-p2a <- ggplot(data = Happiness,aes( x =freedom_to_make_life_choices, y = ladder_score)) +
-  geom_point(size= 2.5, alpha= 0.8, color= "white") +
+#| title: "Happiness rates when there's freedom to make life choices"
+p2 <- ggplot(data = Happiness,aes( x =freedom_to_make_life_choices, y = ladder_score, color= regional_indicator)) +
+  geom_point(size= 2.5, alpha= 0.8) +
   geom_smooth (method= "lm",se= FALSE, color= "pink") +
   labs(title = "Happiness (ladder) scores when there's freedom to make life choices",
        x= "Free-will",
@@ -54,17 +60,19 @@ p2a <- ggplot(data = Happiness,aes( x =freedom_to_make_life_choices, y = ladder_
        color= "Region") +
   theme_minimal() +
   theme(
-    plot.title = element_text(face= "bold", family = "mono", size = 17, hjust= 0.5 ),
+    plot.title = element_text(face= "bold", family = "mono", size = 13, hjust= 0.2 ),
     axis.title = element_text(face= "bold", family = "sans", color = "plum"),
     panel.background = element_rect(fill= "black", color = NA),
     plot.background = element_rect(fill= "lavender", color = NA)
   )
-ggplotly(p2a)
 
-### Happiness rates when region is corrupted: less free-will
+ggplotly(p2)
+```
 
-p2b <- ggplot(data = Happiness,aes( x =perceptions_of_corruption, y = ladder_score)) +
-  geom_point(size= 2.5, alpha= 0.8, color= "white") +
+```{r}
+#| title: "Happiness rates when region is corrupted: less free-will"
+p2 <- ggplot(data = Happiness,aes( x =perceptions_of_corruption, y = ladder_score, color= regional_indicator)) +
+  geom_point(size= 2.5, alpha= 0.8) +
   geom_smooth (method= "lm",se= FALSE, color= "pink") +
   labs(title = "Influence of corruption perceptions on happiness levels (ladder score)",
        x= "Corruption perception",
@@ -72,33 +80,50 @@ p2b <- ggplot(data = Happiness,aes( x =perceptions_of_corruption, y = ladder_sco
        color= "Region") +
   theme_minimal() +
   theme(
-    plot.title = element_text(face= "bold", family = "mono", size = 17, hjust= 0.5 ),
+    plot.title = element_text(face= "bold", family = "mono", size = 13, hjust= 0.2 ),
     axis.title = element_text(face= "bold", family = "sans", color = "plum"),
     panel.background = element_rect(fill= "black", color = NA),
     plot.background = element_rect(fill= "lavender", color = NA)
   )
   
-ggplotly(p2b)  
-  
-
+ggplotly(p2)  
 ```
 
-### Row 2
+### Map
 
 ```{r}
 
-```
+plot_ly(
+  data = Happiness,
+  type = "choropleth",
+  locations = ~country_name,
+  locationmode = "country names",
+  z = ~ladder_score,
+  colorscale = list(
+    c(0, "#f2e5ff"),  
+  c(0.5, "#b38aff"),
+  c(1, "#5a31f2")   
+),
+  text = ~paste("Country:", country_name,
+                "<br>Score:", ladder_score),
+  hoverinfo = "text"
 
-```{r}
+) %>%
+  layout(
+    title = list( text = "<b>World Happiness Levels (2024)</b>", y= 0.92, 
+                  font = list(family = "mono",
+                              size = 20,
+                              color= "black")),
+    geo = list(
+      showframe = FALSE,
+      showcoastlines = FALSE,
+      projection = list(type = "equirectangular"),
+      bgcolor= "black"
+    ),
+    paper_bgcolor = "lavender",               
+    plot_bgcolor = "black",
+    margin= list(t = 50)
+  )
 
-### Column1 {.tabset}
 
-#### Complexity
-
-
-
-
-```
-
-```{r}
 ```
