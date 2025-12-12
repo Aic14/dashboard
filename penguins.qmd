@@ -1,8 +1,12 @@
 ---
-title: "penguins.qmd"
+title: "penguins dashboard"
 author: "Aichen Rayphand"
-format: dashboard
+format: 
+  dashboard:
+    theme: United
 ---
+
+## Row 1
 
 ```{r, echo=FALSE}
 library(tidyverse)
@@ -21,14 +25,51 @@ ggplot(penguins, aes(island, culmen_length_mm, fill = island))+
     title= "The Culmen length by the penguin islands",
     x = "Island",
     y = "Culmen_length_mm"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, vjust = .5, hjust = 1),
+        axis.title = element_text(face= "bold", family = "mono", color = "red"),
+        plot.title = element_text(size = 17, face = "bold", family = "mono", hjust= 0.5),
+        panel.background = element_rect(fill= "orange", color = NA),
+        plot.background = element_rect(fill= "yellow", color = NA))
+
+```
+
+```{r}
+p2 <- ggplot(data = penguins, aes(x= species, y= flipper_length_mm))+
+  geom_bar(stat = "identity") +
+  labs(
+    title = "flipper length by species"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, vjust = .5, hjust = 1),
+        axis.title = element_text(face= "bold", family = "sans", color = "red"),
+        plot.title = element_text(size = 17, face = "bold", family = "mono", hjust= 0.5),
+        panel.background = element_rect(fill= "orange", color = NA),
+        plot.background = element_rect(fill= "yellow", color = NA))
+
+ggplotly(p2)
+```
+
+## Row 2
+
+```{r}
+
+ggplot(data= penguins, aes(x= body_mass_g, y= sex, color= sex)) +
+  geom_jitter(width= 0.2, alpha= 0.5, size= 2) +
+  labs(
+    title = "Different Sex's Body Mass"
+  ) +
+  theme(
+    plot.title = element_text(face= "bold", family = "mono", size = 13, hjust= 0.2 ),
+    axis.title = element_text(face= "bold", family = "sans", color = "red"),
+    panel.background = element_rect(fill= "gold", color = NA),
+    plot.background = element_rect(fill= "yellow", color = NA)
   )
 
 ```
 
 ```{r}
-
-```
-
-```{r}
-
+penguins <- penguins %>%
+  select(species, island, flipper_length_mm, sex, body_mass_g, culmen_length_mm)
+  
+knitr::kable(penguins)
 ```
