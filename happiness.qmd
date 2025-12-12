@@ -1,11 +1,13 @@
 ---
-title: "World Happiness Report(2024) Dashboard"
+title: "World Happiness Report Dashboard"
 author: "Aichen Rayphand"
 format:
   dashboard:
     theme: Vapor 
 nav-buttons: [github]
 ---
+
+This dashboard provides visualizations on the 2024 World happiness Report (Kaggle). They portray the regional happiness levels or scores, and what impacts or effect those happiness scores.
 
 ## Row 1
 
@@ -40,19 +42,34 @@ p2 <- ggplot(data = Happiness_region, aes(x =reorder(regional_indicator, mean_sc
         plot.background = element_rect(fill= "lavender", color = NA))
 
 ggplotly(p2)
-
-
 ```
 
-## World_Happiness visuals {. tabset}
+```{r}
+p2 <- ggplot(data = Happiness, aes(x= regional_indicator, y= ladder_score, fill= regional_indicator))+
+  geom_boxplot() +
+  labs(
+    title= "Regional social support that impacts happiness levels/scores",
+    x = "Regions",
+    y = "Social Support",
+    colour= "Happiness score"
+  ) + 
+  theme(axis.text.x = element_text(angle = 60, vjust = .4, hjust = 1, color= "black", family= "serif"),
+        axis.title = element_text(face= "bold", family = "sans", color = "plum"),
+        plot.title = element_text(size = 14, face = "bold", family = "mono", hjust= 0.1),
+        panel.background = element_rect(fill= "black", color = NA),
+        plot.background = element_rect(fill= "lavender", color = NA))
 
-### Plots
+ggplotly(p2)
+```
 
-### plot 1
+## World_Happiness visuals
+
+### Plots {.tabset}
+
+#### Happiness rates when there's freedom to make life choices
 
 ```{r, warning=FALSE}
 
-#| title: "Happiness rates when there's freedom to make life choices"
 p2 <- ggplot(data = Happiness,aes( x =freedom_to_make_life_choices, y = ladder_score, color= regional_indicator)) +
   geom_point(size= 2.5, alpha= 0.8) +
   geom_smooth (method= "lm",se= FALSE, color= "pink") +
@@ -71,8 +88,9 @@ p2 <- ggplot(data = Happiness,aes( x =freedom_to_make_life_choices, y = ladder_s
 ggplotly(p2)
 ```
 
+#### Happiness rates when region has higher rates of corruption
+
 ```{r}
-#| title: "Happiness rates when region is corrupted: less free-will"
 p2 <- ggplot(data = Happiness,aes( x =perceptions_of_corruption, y = ladder_score, color= regional_indicator)) +
   geom_point(size= 2.5, alpha= 0.8) +
   geom_smooth (method= "lm",se= FALSE, color= "pink") +
@@ -89,43 +107,5 @@ p2 <- ggplot(data = Happiness,aes( x =perceptions_of_corruption, y = ladder_scor
   )
   
 ggplotly(p2)  
-```
-
-### Map
-
-```{r}
-
-plot_ly(
-  data = Happiness,
-  type = "choropleth",
-  locations = ~country_name,
-  locationmode = "country names",
-  z = ~ladder_score,
-  colorscale = list(
-    c(0, "#f2e5ff"),  
-  c(0.5, "#b38aff"),
-  c(1, "#5a31f2")   
-),
-  text = ~paste("Country:", country_name,
-                "<br>Score:", ladder_score),
-  hoverinfo = "text"
-
-) %>%
-  layout(
-    title = list( text = "<b>World Happiness Levels (2024)</b>", y= 0.92, 
-                  font = list(family = "mono",
-                              size = 20,
-                              color= "black")),
-    geo = list(
-      showframe = FALSE,
-      showcoastlines = FALSE,
-      projection = list(type = "equirectangular"),
-      bgcolor= "black"
-    ),
-    paper_bgcolor = "lavender",               
-    plot_bgcolor = "black",
-    margin= list(t = 50)
-  )
-
 
 ```
