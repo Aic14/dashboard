@@ -47,7 +47,9 @@ ggplotly(p2)
 ## World_Happiness visuals {. tabset}
 
 ### Plots
+
 ### plot 1
+
 ```{r, warning=FALSE}
 
 #| title: "Happiness rates when there's freedom to make life choices"
